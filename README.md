@@ -1,5 +1,5 @@
 # 🇦🇷 BORA Scraper Downloader
-**High-Resilience Automated Extraction for the Argentine Official Gazette**
+**High-Resilience Automated Extraction PDFs for the Boletín Oficial de la República Argentina (BORA)**
 
 <p align="center">
   <strong>
