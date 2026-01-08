@@ -1,0 +1,15 @@
+# Ignorar archivos de descarga masiva
+descargas_bora/
+*.pdf
+
+# Ignorar configuraciones locales y secretos
+.env
+.env.local
+.venv
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Logs
+*.log
