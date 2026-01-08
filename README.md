@@ -40,7 +40,7 @@ El sistema integra múltiples capas de protección para evitar bloqueos por IP o
 ### 🚀 Guía de Configuración
 
 #### Requisitos
-*   Python 3.9+
+*   Python 3.8+ (Recomendado 3.10+)
 *   Librería `requests` (`pip install requests`)
 
 #### Configuración del Script
@@ -87,7 +87,7 @@ The system integrates multiple protection layers to avoid IP bans or automated a
 ### 🚀 Configuration Guide
 
 #### Requirements
-*   Python 3.9+
+*   Python 3.8+ (Recommended 3.10+)
 *   `requests` library (`pip install requests`)
 
 #### Script Setup
@@ -111,4 +111,4 @@ def main():
 **[EN]** This software is developed exclusively for educational and data journalism purposes. Responsible use of public data and respect for the official site's terms of service is the user's sole obligation.
 
 ---
-**Developed by VerasLogic** 🦅
+**Developed by [VerasLogic](https://veraslogic.com)** 🦅
