@@ -34,7 +34,7 @@ pip install requests
 ```
 
 #### 2. Configuración
-Abre el archivo `descargador_bora.py` y ve al final, a la función `main()`. Ahí defines qué rango de fechas descargar:
+Abre el archivo `descargador_bora.py` y ve al final, a la función `main()`. Ahí defines qué rango de fechas y qué secciones descargar:
 
 ```python
 def main():
@@ -43,13 +43,13 @@ def main():
     fecha_fin = datetime(2024, 1, 31)
 ```
 
+> **Importante:** Puedes elegir qué secciones descargar (Licitaciones, Sociedades, Normativa) modificando el parámetro `secciones=[2]` en el script.
+
 #### 3. Ejecución
 ```bash
 python descargador_bora.py
 ```
 Los archivos se guardarán ordenados en: `descargas_bora/seccion_X/año/mes/`.
-
-> **Nota:** Puedes elegir qué secciones descargar (Licitaciones, Sociedades, Normativa) modificando el parámetro `secciones=[2]` en el script.
 
 ---
 
@@ -77,7 +77,7 @@ pip install requests
 ```
 
 #### 2. Configuration
-Open `descargador_bora.py` and find the `main()` function at the bottom. Set your desired date range:
+Open `descargador_bora.py` and find the `main()` function at the bottom. Set your desired date range and sections:
 
 ```python
 def main():
@@ -86,13 +86,13 @@ def main():
     fecha_fin = datetime(2024, 1, 31)
 ```
 
+> **Important:** You can choose which sections to download (Procurement, Corporations, Regulations) by modifying the `secciones=[2]` parameter in the script.
+
 #### 3. Execution
 ```bash
 python descargador_bora.py
 ```
 Files will be saved automatically in: `descargas_bora/seccion_X/year/month/`.
-
-> **Note:** You can choose which sections to download (Procurement, Corporations, Regulations) by modifying the `secciones=[2]` parameter in the script.
 
 ---
 
