@@ -1,102 +1,114 @@
 # 🇦🇷 BORA Scraper Downloader
+**High-Resilience Automated Extraction for the Argentine Official Gazette**
 
 <p align="center">
   <strong>
-    <a href="#-documentación-en-español">🇪🇸 Español</a>
+    <a href="#-español">🇪🇸 Español</a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href="#-english-documentation">🇺🇸 English</a>
+    <a href="#-english">🇺🇸 English</a>
   </strong>
 </p>
 
 ---
 
-<div id="es"></div>
+<div id="español"></div>
 
 ## 🇪🇸 Documentación en Español
 
-**Descargador de alta resiliencia para el Boletín Oficial de la República Argentina (BORA).**
+### 📋 Descripción General
+El **BORA Scraper Downloader** es un motor de extracción de alta fidelidad diseñado para automatizar la descarga de documentos PDF del Boletín Oficial de la República Argentina (BORA). A diferencia de los descargadores simples, esta herramienta implementa técnicas de **simulación de comportamiento humano** para garantizar la continuidad del servicio frente a las medidas de seguridad del servidor oficial.
 
-Este script permite descargar masivamente los documentos (PDFs) del Boletín Oficial, gestionando automáticamente las sesiones y asegurando la integridad de las descargas. Diseñado para investigadores, periodistas de datos y desarrolladores que necesitan construir bases de datos históricas.
+### 🛠️ Detalles Técnicos (Deep Dive)
 
-### 🔥 Características Clave
-- **🕵️‍♂️ Gestión Robusta de Sesiones**: Implementa rotación de Identidad Digital (`User-Agent`) para maximizar la compatibilidad con el servidor.
-- **🔄 Session Priming**: Inicializa cookies de sesión válidas visitando la página como un navegador real antes de solicitar el archivo, garantizando la descarga correcta.
-- **🛡️ Tolerancia a Fallos**: Sistema de reintentos automáticos para manejar intermitencias de la API oficial o micro-cortes de red.
-- **⚡ 100% Python Puro**: Script independiente sin bases de datos ni dependencias externas complejas.
+Para garantizar la efectividad, el script opera bajo tres pilares de ingeniería:
 
-### 🚀 Guía de Uso Rápida
+#### 1. Session Priming (Inicialización de Contexto)
+El servidor del BORA no permite descargas directas mediante URLs estáticas. El script replica el flujo de un navegador real:
+1.  **Fase de Cebado**: Realiza una petición `GET` a la página de visualización del día para establecer las cookies de sesión y el estado del lado del servidor.
+2.  **Petición de Carga**: Ejecuta una petición `POST` al endpoint de la API (`/pdf/download_section`) enviando exactamente los parámetros que espera el controlador JavaScript oficial.
 
-#### 1. Instalación
-Solo necesitas Python 3 y la librería `requests`:
+#### 2. Resiliencia Anti-Bot
+El sistema integra múltiples capas de protección para evitar bloqueos por IP o detección de actividad automatizada:
+*   **Rotación de Identidad**: Utiliza un pool de `User-Agents` modernos, alternando la "huella digital" del navegador en cada sesión.
+*   **Gestión de Pausas Heurísticas**: Implementa retardos aleatorios (`random.randint`) entre descargas, simulando el tiempo de lectura y navegación de un usuario humano.
+*   **Refresco de Sesión**: El script destruye y recrea la sesión de red cada 5 días procesados, limpiando cookies acumuladas que podrían disparar alertas de seguridad.
 
-```bash
-pip install requests
-```
+#### 3. Integridad de Datos
+*   **Verificación de Corrupción**: Detecta automáticamente si un archivo PDF se descargó de forma incompleta (archivos de <1KB) y permite reintentar la descarga de forma limpia.
+*   **Estructura Jerárquica**: Organiza automáticamente las descargas por `/seccion/año/mes/`, facilitando la auditoría posterior.
 
-#### 2. Configuración
-Abre el archivo `descargador_bora.py` y ve al final, a la función `main()`. Ahí defines qué rango de fechas y qué secciones descargar:
+### 🚀 Guía de Configuración
+
+#### Requisitos
+*   Python 3.9+
+*   Librería `requests` (`pip install requests`)
+
+#### Configuración del Script
+Edita la función `main()` en `descargador_bora.py` para definir tu objetivo:
 
 ```python
 def main():
-    # Ejemplo: Descargar Enero 2024 completo
-    fecha_inicio = datetime(2024, 1, 1) 
-    fecha_fin = datetime(2024, 1, 31)
+    # Rango de fechas: Desde el pasado hacia el presente
+    fecha_inicio = datetime(2023, 1, 1) 
+    fecha_fin = datetime(2024, 5, 31)
+    
+    # Seciones: 1 (Normativa), 2 (Sociedades), 3 (Contrataciones)
+    descargar_dia_api(session, current_date, secciones=[2, 3])
 ```
-
-> **Importante:** Puedes elegir qué secciones descargar (Licitaciones, Sociedades, Normativa) modificando el parámetro `secciones=[2]` en el script.
-
-#### 3. Ejecución
-```bash
-python descargador_bora.py
-```
-Los archivos se guardarán ordenados en: `descargas_bora/seccion_X/año/mes/`.
 
 ---
 
-<div id="en"></div>
+<div id="english"></div>
 
 ## 🇺🇸 English Documentation
 
-**Robust high-availability downloader for the Official Gazette of the Argentine Republic (BORA).**
+### 📋 Overview
+The **BORA Scraper Downloader** is a high-fidelity extraction engine designed to automate the downloading of PDF documents from the Official Gazette of the Argentine Republic (BORA). Unlike basic downloaders, this tool implements **human behavior simulation** techniques to ensure service continuity against the official server's security measures.
 
-This script allows for bulk downloading of PDF documents from the Official Gazette, automatically managing sessions and ensuring download integrity. Designed for researchers, data journalists, and developers building historical datasets.
+### 🛠️ Technical Details (Deep Dive)
 
-### 🔥 Key Features
-- **🕵️‍♂️ Robust Session Management**: Implements Digital Identity rotation (`User-Agent`) to maximize server compatibility and avoid stalls.
-- **🔄 Session Priming**: Initializes valid session cookies by visiting the target page like a real browser before requesting the file, ensuring successful delivery.
-- **🛡️ Fault Tolerance**: Built-in automatic retries to handle official API intermittency or network hiccups gracefully.
-- **⚡ Pure Python**: Standalone tool. No databases or complex external dependencies required.
+To ensure maximum effectiveness, the script is built on three engineering pillars:
 
-### 🚀 Quick Start Guide
+#### 1. Session Priming (Context Initialization)
+The BORA server does not allow direct downloads via static URLs. The script replicates the flow of a real browser:
+1.  **Priming Phase**: It performs a `GET` request to the daily view page to set session cookies and server-side state.
+2.  **Payload Dispatch**: It executes a `POST` request to the API endpoint (`/pdf/download_section`), sending the exact parameters expected by the official JavaScript controller.
 
-#### 1. Installation
-You only need Python 3 and `requests`:
+#### 2. Anti-Bot Resilience
+The system integrates multiple protection layers to avoid IP bans or automated activity detection:
+*   **Identity Rotation**: Uses a pool of modern `User-Agents`, alternating the browser's "digital fingerprint" in each session.
+*   **Heuristic Delay Management**: Implements randomized delays (`random.randint`) between downloads, simulating the reading and navigation time of a human user.
+*   **Session Refreshing**: The script destroys and recreates the network session every 5 processed days, clearing accumulated cookies that could trigger security alerts.
 
-```bash
-pip install requests
-```
+#### 3. Data Integrity
+*   **Corruption Detection**: Automatically detects if a PDF file was downloaded incompletely (files <1KB) and allows for a clean retry.
+*   **Hierarchical Structure**: Automatically organizes downloads by `/section/year/month/`, facilitating future auditing.
 
-#### 2. Configuration
-Open `descargador_bora.py` and find the `main()` function at the bottom. Set your desired date range and sections:
+### 🚀 Configuration Guide
+
+#### Requirements
+*   Python 3.9+
+*   `requests` library (`pip install requests`)
+
+#### Script Setup
+Edit the `main()` function in `descargador_bora.py` to define your target:
 
 ```python
 def main():
-    # Example: Download all January 2024
-    fecha_inicio = datetime(2024, 1, 1) 
-    fecha_fin = datetime(2024, 1, 31)
+    # Date range: From past to present
+    fecha_inicio = datetime(2023, 1, 1) 
+    fecha_fin = datetime(2024, 5, 31)
+    
+    # Sections: 1 (Regulations), 2 (Corporations), 3 (Procurement)
+    descargar_dia_api(session, current_date, secciones=[1, 2, 3])
 ```
-
-> **Important:** You can choose which sections to download (Procurement, Corporations, Regulations) by modifying the `secciones=[2]` parameter in the script.
-
-#### 3. Execution
-```bash
-python descargador_bora.py
-```
-Files will be saved automatically in: `descargas_bora/seccion_X/year/month/`.
 
 ---
 
-## ⚠️ Disclaimer/Aviso Legal
+## ⚠️ Disclaimer / Aviso Legal
 
-**[ES]** Este software fue desarrollado exclusivamente para fines educativos y de investigación periodística. El uso responsable de los datos públicos es obligación del usuario.
-**[EN]** This software is developed exclusively for educational and data journalism purposes. Responsible use of public data is the user's sole obligation.
+**[ES]** Este software fue desarrollado exclusivamente para fines educativos y de investigación periodística. El uso responsable de los datos públicos y el respeto por los términos de servicio del sitio oficial es obligación del usuario.
+**[EN]** This software is developed exclusively for educational and data journalism purposes. Responsible use of public data and respect for the official site's terms of service is the user's sole obligation.
+
+---
+**Developed by VerasLogic** 🦅
