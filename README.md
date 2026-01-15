@@ -9,6 +9,12 @@
   </strong>
 </p>
 
+</p>
+
+<p align="center">
+  <img src="assets/dashboard_metrics.png" alt="BORA Dashboard" width="100%">
+</p>
+
 ---
 
 <div id="español"></div>
